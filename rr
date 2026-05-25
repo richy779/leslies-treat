@@ -1,0 +1,244 @@
+export default function LesliesTreatsWebsite() {
+  const [page, setPage] = React.useState('home');
+  const [question, setQuestion] = React.useState('');
+  const [chat, setChat] = React.useState([
+    {
+      sender: 'bot',
+      text: 'Welcome to Leslie’s Treats 🍰 Ask me about desserts, prices, delivery, or custom orders!'
+    }
+  ]);
+
+  const desserts = [
+    {
+      name: 'Chocolate Dream Cake',
+      description: 'Rich chocolate cake layered with smooth fudge frosting.',
+      price: '$25'
+    },
+    {
+      name: 'Vanilla Berry Cupcakes',
+      description: 'Soft vanilla cupcakes topped with fresh berry cream.',
+      price: '$18'
+    },
+    {
+      name: 'Caramel Cheesecake',
+      description: 'Creamy cheesecake drizzled with homemade caramel.',
+      price: '$30'
+    },
+    {
+      name: 'Strawberry Delight',
+      description: 'Fresh strawberries layered with whipped cream and sponge cake.',
+      price: '$22'
+    }
+  ];
+
+  const getBotResponse = (msg) => {
+    const lower = msg.toLowerCase();
+
+    if (lower.includes('hello') || lower.includes('hi')) {
+      return 'Hello 👋 Welcome to Leslie’s Treats!';
+    }
+
+    if (lower.includes('price') || lower.includes('cost')) {
+      return 'Our desserts range from $18 to $30 depending on size and customization.';
+    }
+
+    if (lower.includes('delivery')) {
+      return 'Yes 🚚 We offer local delivery and pickup options.';
+    }
+
+    if (lower.includes('custom')) {
+      return 'Absolutely 🎂 We create custom cakes and desserts for birthdays, weddings, and events.';
+    }
+
+    if (lower.includes('contact')) {
+      return 'You can contact Leslie at lesliestreats@email.com or call (555) 123-4567.';
+    }
+
+    if (lower.includes('hours')) {
+      return 'We are open Monday - Saturday from 9AM to 7PM.';
+    }
+
+    return 'Thanks for your question 💙 A team member will get back to you soon!';
+  };
+
+  const sendMessage = () => {
+    if (!question.trim()) return;
+
+    const userMessage = {
+      sender: 'user',
+      text: question
+    };
+
+    const botMessage = {
+      sender: 'bot',
+      text: getBotResponse(question)
+    };
+
+    setChat((prev) => [...prev, userMessage, botMessage]);
+    setQuestion('');
+  };
+
+  const navButton = (label, value) => (
+    <button
+      onClick={() => setPage(value)}
+      className={`px-4 py-2 rounded-2xl transition-all duration-300 font-semibold ${
+        page === value
+          ? 'bg-white text-[#1E3A5F]'
+          : 'bg-[#274B74] text-white hover:bg-white hover:text-[#1E3A5F]'
+      }`}
+    >
+      {label}
+    </button>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#1E3A5F] text-white font-sans">
+      <header className="shadow-xl p-6 sticky top-0 bg-[#1E3A5F] z-50 border-b border-white/20">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            <h1 className="text-4xl font-bold">Leslie’s Treats</h1>
+            <p className="text-sm opacity-80">Sweet desserts made with love 💙</p>
+          </div>
+
+          <nav className="flex flex-wrap gap-3">
+            {navButton('Home', 'home')}
+            {navButton('Desserts', 'desserts')}
+            {navButton('Description', 'description')}
+            {navButton('Contact', 'contact')}
+          </nav>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto p-6">
+        {page === 'home' && (
+          <div className="grid md:grid-cols-2 gap-10 items-center py-10">
+            <div>
+              <h2 className="text-5xl font-bold leading-tight mb-6">
+                Delicious Homemade Desserts for Every Occasion
+              </h2>
+              <p className="text-lg opacity-90 mb-6">
+                Leslie’s Treats specializes in cakes, cupcakes, cheesecakes, and sweet desserts crafted fresh daily.
+              </p>
+
+              <button
+                onClick={() => setPage('desserts')}
+                className="bg-white text-[#1E3A5F] px-6 py-3 rounded-2xl font-bold hover:scale-105 transition"
+              >
+                Explore Desserts
+              </button>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
+              <h3 className="text-2xl font-bold mb-4">Why Customers Love Us</h3>
+
+              <ul className="space-y-4 text-lg">
+                <li>✔ Fresh baked daily</li>
+                <li>✔ Premium ingredients</li>
+                <li>✔ Custom event orders</li>
+                <li>✔ Fast local delivery</li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {page === 'desserts' && (
+          <div className="py-10">
+            <h2 className="text-4xl font-bold mb-8">Our Desserts</h2>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {desserts.map((dessert, index) => (
+                <div
+                  key={index}
+                  className="bg-white text-[#1E3A5F] rounded-3xl p-6 shadow-2xl hover:scale-105 transition"
+                >
+                  <div className="h-40 rounded-2xl bg-[#D9E6F2] mb-4 flex items-center justify-center text-xl font-bold">
+                    🍰
+                  </div>
+
+                  <h3 className="text-2xl font-bold mb-2">{dessert.name}</h3>
+                  <p className="mb-4">{dessert.description}</p>
+                  <div className="text-xl font-bold">{dessert.price}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {page === 'description' && (
+          <div className="py-10 max-w-4xl mx-auto">
+            <div className="bg-white/10 p-8 rounded-3xl shadow-2xl border border-white/20">
+              <h2 className="text-4xl font-bold mb-6">About Leslie’s Treats</h2>
+
+              <p className="text-lg leading-8 opacity-90 mb-6">
+                Leslie’s Treats was created with a passion for baking and creating unforgettable desserts. Every cake, cupcake, and pastry is handmade with care using quality ingredients.
+              </p>
+
+              <p className="text-lg leading-8 opacity-90 mb-6">
+                Whether you’re celebrating a birthday, wedding, anniversary, or simply craving something sweet, Leslie’s Treats delivers desserts that bring happiness to every moment.
+              </p>
+
+              <p className="text-lg leading-8 opacity-90">
+                Our mission is simple: create desserts that taste amazing and look beautiful.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {page === 'contact' && (
+          <div className="py-10 grid lg:grid-cols-2 gap-8">
+            <div className="bg-white/10 p-8 rounded-3xl border border-white/20 shadow-2xl">
+              <h2 className="text-4xl font-bold mb-6">Contact Us</h2>
+
+              <div className="space-y-4 text-lg">
+                <p><strong>Email:</strong> lesliestreats@email.com</p>
+                <p><strong>Phone:</strong> (555) 123-4567</p>
+                <p><strong>Location:</strong> Belize City, Belize</p>
+                <p><strong>Hours:</strong> Monday - Saturday | 9AM - 7PM</p>
+              </div>
+            </div>
+
+            <div className="bg-white text-[#1E3A5F] rounded-3xl p-6 shadow-2xl flex flex-col h-[500px]">
+              <h3 className="text-2xl font-bold mb-4">Customer Assistant 💬</h3>
+
+              <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
+                {chat.map((message, index) => (
+                  <div
+                    key={index}
+                    className={`p-3 rounded-2xl max-w-[85%] ${
+                      message.sender === 'user'
+                        ? 'bg-[#1E3A5F] text-white ml-auto'
+                        : 'bg-[#D9E6F2]'
+                    }`}
+                  >
+                    {message.text}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                  placeholder="Ask a question..."
+                  className="flex-1 border border-gray-300 rounded-2xl px-4 py-3 outline-none"
+                />
+
+                <button
+                  onClick={sendMessage}
+                  className="bg-[#1E3A5F] text-white px-6 rounded-2xl font-bold hover:opacity-90"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      <footer className="border-t border-white/20 mt-10 py-6 text-center opacity-80">
+        © 2026 Leslie’s Treats • All Rights Reserved
+      </footer>
+    </div>
+  );
+}
